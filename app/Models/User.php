@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -23,7 +23,13 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'address', // Asegúrate de incluir 'address' aquí
+    ];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -50,17 +56,19 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'address' => 'string', // Asegúrate de que 'address' esté en los casts si es necesario
+    ];
+
+    public function tickets()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->hasMany(Ticket::class);
     }
-    public function tickets(){
-        return $this->hasMany(ticket::class);
-    }
-    public function branch(){
+
+    public function branch()
+    {
         return $this->belongsTo(Branch::class);
     }
 }
