@@ -1,5 +1,8 @@
+
 <?php
 
+use App\Http\Controllers\Api\LoginController;
+use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -7,9 +10,8 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-//todas las APIS se versionan, es decir:
-//es basicamente una instruccion que nos permite identificar la forma en la que cambia el modelo de dato
+Route::post('login',[LoginController::class,'login'])->name('login');
 
-Route::group(['prefix'=>'v1'],function(){
-    Route::apiResource('products', \App\Http\Controllers\Api\ProductController::class);
+Route::group(['prefix' => 'v1','middleware'=>'auth:sanctum'], function () {
+    Route::apiResource('products', ProductController::class);
 });
